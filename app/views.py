@@ -282,38 +282,42 @@ def load_users():
 
 @socket_io.on('messages')
 @timer
-def test_message(data):
+def socket_message(data):
     item_per_page = data.get('item_per_page') or 20
     page = data.get('page') or 1
     from_ = 0 if page == 1 else item_per_page * (page - 1)
-    channel = Channels.objects(recipient=Users.objects(id=data.get('g_user_id')).first(),
+    channel1 = Channels.objects(recipient=Users.objects(id=data.get('g_user_id')).first(),
           sender=Users.objects(id=data.get('user_id')).first()).first()
+    channel2 = Channels.objects(
+        recipient=Users.objects(id=data.get('user_id')).first(),
+        sender=Users.objects(id=data.get('g_user_id')).first()).first()
     msgs = []
-    if channel:
+    if channel1 or channel2:
         msgs = Messages.objects(
-            channel=channel).order_by('-cr_tm')[from_:item_per_page * page]
+            channel__in=[channel1, channel2]).order_by('-cr_tm')[from_:item_per_page * page]
+    Messages.objects(channel=channel1).update(status=Messages.STATUSES['READ'])
     messgs = list(msgs)
     messgs.reverse()
     emit('response', {'data': [message.object_to_dict() for message in messgs]})
 
 
-@main.route('get_messages', methods=['POST'])
-# @admin
-@timer
-def messages_post():
-    item_per_page = request.json.get('item_per_page') or 20
-    page = request.json.get('page') or 1
-    from_ = 0 if page == 1 else item_per_page * (page-1)
-    channel = Channels.objects(sender=user, recipient=g.user).first()
-    print(channel)
-    msgs = Messages.objects(
-        Q(recipient=Users.objects(id=request.json.get('user_id')).first(),
-          sender=g.user) |
-        Q(sender=Users.objects(id=request.json.get('user_id')).first(),
-          recipient=g.user)).order_by('-cr_tm')[from_:item_per_page*page]
-    messgs = list(msgs)
-    messgs.reverse()
-    return dumps([message.object_to_dict() for message in messgs])
+# @main.route('get_messages', methods=['POST'])
+# # @admin
+# @timer
+# def messages_post():
+#     item_per_page = request.json.get('item_per_page') or 20
+#     page = request.json.get('page') or 1
+#     from_ = 0 if page == 1 else item_per_page * (page-1)
+#     channel = Channels.objects(sender=user, recipient=g.user).first()
+#     print(channel)
+#     msgs = Messages.objects(
+#         Q(recipient=Users.objects(id=request.json.get('user_id')).first(),
+#           sender=g.user) |
+#         Q(sender=Users.objects(id=request.json.get('user_id')).first(),
+#           recipient=g.user)).order_by('-cr_tm')[from_:item_per_page*page]
+#     messgs = list(msgs)
+#     messgs.reverse()
+#     return dumps([message.object_to_dict() for message in messgs])
 
 
 @main.route('send_message', methods=['POST'])
