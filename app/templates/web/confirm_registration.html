@@ -1,0 +1,40 @@
+{% extends 'web/main.html' %}
+
+{% block content %}
+<script>
+    whattodoApp.controller('manage_users', function($scope, $http, $timeout) {
+        $scope.loading = false;
+
+        $scope.remove_user = function(id) {
+			return $http({ method: 'POST',url: '/remove_user', data: {id:id}}).then(function successCallback(data) {
+
+            }, function errorCallback(response) {
+            });
+        };
+
+        $scope.load = function() {
+            $scope.loading = true;
+			return $http({ method: 'POST',url: '/manage_users'}).then(function successCallback(data) {
+                $scope.users = data.data.users;
+                $scope.loading = false;
+            }, function errorCallback(response) {
+
+            });
+        };
+
+    });
+</script>
+  <h2>List users</h2>
+    {% raw %}
+    <div ng-controller="manage_users" ng-init="load()">
+        <ul ng-repeat="user in users" >
+            Name:
+            <li ng-bind="user.name"></li>
+            Email:
+            <li ng-bind="user.email"></li>
+            OpenID:
+            <li ng-bind="user.open_id"></li><button ng-click="ban(user.id)">Ban</button><button ng-click="remove_user(user.id)">Delete</button>
+        </ul>
+    </div>
+    {% endraw %}
+{% endblock %}

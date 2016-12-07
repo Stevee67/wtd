@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+      {% block metas %}
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      {% endblock %}
+      <title>{% block title %}What to do{% endblock %}</title>
+
+      {% block styles %}
+        <link href="/static/css/bootstrap.css" rel='stylesheet' type='text/css' />
+        <link href="/static/css/style.css" rel='stylesheet' type='text/css' />
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:400,700,600' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+        <link href="/static/css/font-awesome.css" rel="stylesheet">
+        <link href="/static/css/animate.css" rel="stylesheet" type="text/css" media="all">
+      {% endblock %}
+
+      {% block head %}
+        <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <script type="applijewelleryion/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+        <!-- Custom Theme files -->
+        <script src="/static/js/jquery-1.12.0.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+        <script src="/static/js/custom.js"></script>
+        <!--animate-->
+
+        <script src="/static/js/wow.min.js"></script>
+            <script>
+                 new WOW().init();
+            </script>
+        <!--//end-animate-->
+      {% endblock %}
+<body ng-app="whattodo_app">
+        {% include 'web/top_header.html' %}
+        {% include 'web/header.html' %}
+        {% include 'web/footer.html' %}
+            {% with msgs = get_flashed_messages() %}
+                {% if msgs %}
+                    {%- for msg in msgs %}
+                        {% if msg %}
+                          <script>flash('{{msg}}')</script>
+                        {% endif %}
+                    {% endfor -%}
+                {% endif %}
+            {% endwith %}
+        {% include 'web/banner.html' %}
+        {% block content %}
+        {% endblock content %}
+        {% include 'web/bottom.html' %}
+        {% include 'web/modals.html' %}
+
+</body>
+</html>

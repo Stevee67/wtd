@@ -1,0 +1,7 @@
+Flask == 0.10.1
+mongoengine == 0.10.6
+flask-mongoengine == 0.7.5
+requests
+Flask-OpenID == 1.2.5
+flask-socketio == 2.7.0
+gevent == 1.1.2

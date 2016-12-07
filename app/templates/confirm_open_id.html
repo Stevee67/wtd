@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm</title>
+</head>
+<body>
+    <h2>Hello {{user.name}}</h2>
+    <p>If you want to allow from {{ host }} host get your data please click 'Allow'</p>
+    <a href="/allow/{{ user.name }}/{{ host }}">Allow</a>
+</body>
+</html>

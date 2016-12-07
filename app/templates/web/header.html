@@ -1,0 +1,65 @@
+<!--- header ---->
+<script>
+    whattodoApp.controller('header', function($scope, $http, $timeout, socket) {
+		$scope.loading = false;
+		$scope.nragnts = 0;
+		$scope.current_user_id = '{{g.user.id}}';
+		$scope.nmsgs = 0;
+		$scope.load_agents = function () {
+			if($scope.current_user_id){
+				return $http({
+					method: 'POST',
+					url: '/nrm'
+				}).then(function successCallback(data) {
+					$scope.nragnts = data.data.agnts;
+					$scope.nmsgs = data.data.msgs;
+					if (now() - window.lastUserActivity > 300){
+						console.log('ok')
+					}
+					$timeout(function () {
+						$scope.load_agents()
+					},2000)
+
+				}, function errorCallback(response) {
+				});
+			}
+		};
+
+		socket.emit('update', {},function () {
+			return false
+		});
+
+		socket.on('update_load', function (data) {
+			$scope.nagnts = data.nagnts;
+			$scope.nmsgs = data.nmsgs;
+		});
+
+	})
+</script>
+
+<div class="header" ng-controller="header">
+	<div class="container">
+		<div class="logo wow fadeInDown animated" data-wow-delay=".5s">
+			<a href="/">Travel <span>With Us</span></a>
+		</div>
+		<div class="bus wow fadeInUp animated" data-wow-delay=".5s">
+            <a href="/index" class="buses active">BUSES</a>
+            <a href="/hotels">HOTELS</a>
+			{% if g.user %}
+				{% if g.user.admin %}
+					<a href="/manage_users">Manage Users</a>
+					<a href="/manage_agents">Manage Agents<b ng-if="nagnts != '0'">(<span ng-bind="nagnts" style="color: red"></span>)</b></a>
+				{% endif %}
+				<a href="/messages">Messages<b ng-if="nmsgs != '0'">(<span ng-bind="nmsgs" style="color: red"></span>)</b></a>
+			{% endif %}
+
+        </div>
+		<div class="lock fadeInDown animated" data-wow-delay=".5s">
+			<li><i class="fa fa-lock"></i></li>
+            <li><div class="securetxt">SAFE &amp; SECURE<br> ONLINE PAYMENTS</div></li>
+			<div class="clearfix"></div>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+</div>
+<!--- /header ---->

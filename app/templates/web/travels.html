@@ -1,0 +1,258 @@
+{% extends 'web/main.html' %}
+{% block content %}
+<div class="container">
+	<div class="col-md-5 bann-info1">
+		<i class="fa fa-ticket"></i>
+		<h3>30% OFFER  WITH TICKET BOOKING FREE</h3>
+	</div>
+	<div class="col-md-7 bann-info">
+		<h2>Online Tickets with Zero Booking Fees</h2>
+		<div class="ban-top">
+		<form>
+			<div class="bnr-left">
+				<label class="inputLabel">From</label>
+				<input class="city" type="text" value="Enter a city" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Enter a city';}" required=>
+			</div>
+			<div class="bnr-left">
+				<label class="inputLabel">To</label>
+				<input class="city" type="text" value="Enter a city" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Enter a city';}" required=>
+			</div>
+				<div class="clearfix"></div>
+			</form>
+		</div>
+		<div class="ban-bottom">
+		<form>
+			<div class="bnr-right">
+				<label class="inputLabel">Date of Journey</label>
+				<input class="date" id="datepicker" type="text" value="dd-mm-yyyy" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'dd-mm-yyyy';}" required=>
+			</div>
+				<div class="clearfix"></div>
+				<!---start-date-piker---->
+				<link rel="stylesheet" href="/static/css/jquery-ui.css" />
+				<script src="/static/js/jquery-ui.js"></script>
+					<script>
+						$(function() {
+						$( "#datepicker,#datepicker1" ).datepicker();
+						});
+					</script>
+			<!---/End-date-piker---->
+		</form>
+		</div>
+		<div class="sear">
+			<form action="/bus">
+			<button class="seabtn">Search Buses</button>
+			</form>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+</div>
+<!--- /banner ---->
+<!--- travel ---->
+<div class="travel">
+	<div class="container">
+		<h3>New Orleans Charter</h3>
+		<p>A/C Multi-Axle Semisleeper, A/C Sleeper, Non A/C Seater & Sleeper bus types operated by this travel operator. Now book online bus tickets at  Check the amenities provided such as blanket, water, video which can vary by routes before booking tickets.customers can book tickets with debit card, credit card and net banking. Book tickets and enjoy the benefits of m-ticket.</p>
+			<div class="tra-top">
+				<h4>New Orleans Charter : Bus routes and timings</h4>
+					<ul class="rout">
+						<li class="rou">Route</li>
+						<li class="ser">Serv<span class="sen">ices</span></li>
+						<li class="fir">First <span class="sen">Bus</span></li>
+						<li class="las">Last <span class="sen">Bus</span></li>
+						<li class="dat">Date</li>
+						<div class="clearfix"></div>
+					</ul>
+					<!--- rou-secnd ---->
+					<ul class="rou-secnd animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
+						<li class="rou">
+							<p>New Orleans Charter</p>
+							<h6><a href="#">California-Alabama</a></h6>
+						</li>
+						<li class="ser">
+							<p>15 Buses</p>
+						</li>
+						<li class="fir">
+							<p>10:00 AM</p>
+						</li>
+						<li class="las">
+							<p>10:00 PM</p>
+						</li>
+						<li class="dat">
+							<a href="/bus" class="det">View Buses</a>
+						</li>
+						<div class="clearfix"></div>
+					</ul>
+					<!--- /rou-secnd ---->
+					<!--- rou-secnd ---->
+					<ul class="rou-secnd animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
+						<li class="rou">
+							<p>Chicago Charter</p>
+							<h6><a href="#">Arkansas-Florida</a></h6>
+						</li>
+						<li class="ser">
+							<p>11 Buses</p>
+						</li>
+						<li class="fir">
+							<p>10:00 AM</p>
+						</li>
+						<li class="las">
+							<p>10:00 PM</p>
+						</li>
+						<li class="dat">
+							<a href="/bus" class="det">View Buses</a>
+						</li>
+						<div class="clearfix"></div>
+					</ul>
+					<!--- /rou-secnd ---->
+					<!--- rou-secnd ---->
+					<ul class="rou-secnd animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
+						<li class="rou">
+							<p>Houston Charter</p>
+							<h6><a href="#">Indiana-Illinois</a></h6>
+						</li>
+						<li class="ser">
+							<p>16 Buses</p>
+						</li>
+						<li class="fir">
+							<p>10:00 AM</p>
+						</li>
+						<li class="las">
+							<p>10:00 PM</p>
+						</li>
+						<li class="dat">
+							<a href="/bus" class="det">View Buses</a>
+						</li>
+						<div class="clearfix"></div>
+					</ul>
+					<!--- /rou-secnd ---->
+					<!--- rou-secnd ---->
+					<ul class="rou-secnd animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
+						<li class="rou">
+							<p>Toronto Charter</p>
+							<h6><a href="#">Hawaii-Iowa</a></h6>
+						</li>
+						<li class="ser">
+							<p>10 Buses</p>
+						</li>
+						<li class="fir">
+							<p>10:00 AM</p>
+						</li>
+						<li class="las">
+							<p>10:00 PM</p>
+						</li>
+						<li class="dat">
+							<a href="/bus" class="det">View Buses</a>
+						</li>
+						<div class="clearfix"></div>
+					</ul>
+					<!--- /rou-secnd ---->
+					<!--- rou-secnd ---->
+					<ul class="rou-secnd animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
+						<li class="rou">
+							<p>Orlando Charter</p>
+							<h6><a href="#">Delaware-Arizona</a></h6>
+						</li>
+						<li class="ser">
+							<p>13 Buses</p>
+						</li>
+						<li class="fir">
+							<p>10:00 AM</p>
+						</li>
+						<li class="las">
+							<p>10:00 PM</p>
+						</li>
+						<li class="dat">
+							<a href="/bus" class="det">View Buses</a>
+						</li>
+						<div class="clearfix"></div>
+					</ul>
+					<!--- /rou-secnd ---->
+					<!--- rou-secnd ---->
+					<ul class="rou-secnd animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
+						<li class="rou">
+							<p>Chicago Charter</p>
+							<h6><a href="#">California-Alabama</a></h6>
+						</li>
+						<li class="ser">
+							<p>15 Buses</p>
+						</li>
+						<li class="fir">
+							<p>10:00 AM</p>
+						</li>
+						<li class="las">
+							<p>10:00 PM</p>
+						</li>
+						<li class="dat">
+							<a href="/bus" class="det">View Buses</a>
+						</li>
+						<div class="clearfix"></div>
+					</ul>
+					<!--- /rou-secnd ---->
+					<!--- rou-secnd ---->
+					<ul class="rou-secnd animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
+						<li class="rou">
+							<p>Washington Charter</p>
+							<h6><a href="#">Kansas-Georgia</a></h6>
+						</li>
+						<li class="ser">
+							<p>12 Buses</p>
+						</li>
+						<li class="fir">
+							<p>10:00 AM</p>
+						</li>
+						<li class="las">
+							<p>10:00 PM</p>
+						</li>
+						<li class="dat">
+							<a href="/bus" class="det">View Buses</a>
+						</li>
+						<div class="clearfix"></div>
+					</ul>
+					<!--- /rou-secnd ---->
+					<!--- rou-secnd ---->
+					<ul class="rou-secnd animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
+						<li class="rou">
+							<p>Charlotte Charter</p>
+							<h6><a href="#">Charlotte Charter</a></h6>
+						</li>
+						<li class="ser">
+							<p>15 Buses</p>
+						</li>
+						<li class="fir">
+							<p>10:00 AM</p>
+						</li>
+						<li class="las">
+							<p>10:00 PM</p>
+						</li>
+						<li class="dat">
+							<a href="/bus" class="det">View Buses</a>
+						</li>
+						<div class="clearfix"></div>
+					</ul>
+					<!--- /rou-secnd ---->
+					<!--- rou-secnd ---->
+					<ul class="rou-secnd animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
+						<li class="rou">
+							<p>Toronto Charter</p>
+							<h6><a href="#">Georgia-Kansas</a></h6>
+						</li>
+						<li class="ser">
+							<p>12 Buses</p>
+						</li>
+						<li class="fir">
+							<p>10:00 AM</p>
+						</li>
+						<li class="las">
+							<p>10:00 PM</p>
+						</li>
+						<li class="dat">
+							<a href="/bus" class="det">View Buses</a>
+						</li>
+						<div class="clearfix"></div>
+					</ul>
+					<!--- /rou-secnd ---->
+			</div>
+	</div>
+</div>
+<!--- /travel ---->
+{% endblock content %}

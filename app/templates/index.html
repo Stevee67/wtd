@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% block body %}
+{% if new %}
+      <h2>Hello user, we want a little bit more information from you!</h2>
+        <h2>Log out</h2>
+        <a href="/logout">Log out</a>
+{% else %}
+    <H1>Hello {{ user.name }}</H1>
+    <h2>Log out</h2>
+    <a href="/logout">Log out</a>
+{% endif %}
+{% endblock %}
+</body>
+</html>

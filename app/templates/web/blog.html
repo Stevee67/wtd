@@ -1,0 +1,95 @@
+{% extends 'web/main.html' %}
+{% block content %}
+<!--- blog ---->
+	<div class="blog">
+		<div class="container">
+			<div class="col-md-8 blog-left">
+				<div class="comments-list hover14 column animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
+					<h3><a href="/single">Sed ut perspiciatis unde omnis iste natus</a></h3>
+					<ul>
+						
+						<li><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>31 March 2016 <i>|</i></li>
+						<li><a href="#"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>3 Comments</a> <i>|</i></li>
+						<li><a href="#"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>200 Likes</a> <i>|</i></li>
+						<li><a href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>James Kale</a></li>
+					</ul>
+					<div>
+						<figure><a href="/single"><img src="/static/images/7.jpg" alt=" " class="img-responsive"></a></figure>
+					</div>
+					<p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, 
+						adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore 
+						magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum 
+						exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi 
+						consequatur.</p>
+					<div class="more">
+						<a href="/single">More Info...</a>
+					</div>
+				</div>
+				<div class="comments-list hover14 column animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
+					<h3><a href="/single">Quis autem vel eum iure reprehe ea voluptate</a></h3>
+					<ul>
+						
+						<li><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>31 March 2016 <i>|</i></li>
+						<li><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span><a href="/single">3 Comments</a> <i>|</i></li>
+						<li><a href="/single"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>200 Likes</a> <i>|</i></li>
+						<li><a href="/single"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>James Kale</a></li>
+					</ul>
+					<div>
+						<figure><a href="/single"><img src="/static/images/3.jpg" alt=" " class="img-responsive"></a></figure>
+					</div>
+					<p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, 
+						adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore 
+						magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum 
+						exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi 
+						consequatur.</p>
+					<div class="more">
+						<a href="/single">More Info...</a>
+					</div>
+				</div>
+				<div class="comments-list hover14 column animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
+					<h3><a href="/single">At vero eos et accusamus et iusto odio</a></h3>
+					<ul>
+						
+						<li><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>31 March 2016 <i>|</i></li>
+						<li><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span><a href="/single">3 Comments</a> <i>|</i></li>
+						<li><a href="/single"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>200 Likes</a> <i>|</i></li>
+						<li><a href="/single"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>James Kale</a></li>
+					</ul>
+					<div>
+						<figure><a href="/single"><img src="/static/images/1.jpg" alt=" " class="img-responsive"></a></figure>
+					</div>
+					<p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, 
+						adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore 
+						magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum 
+						exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi 
+						consequatur.</p>
+					<div class="more">
+						<a href="/single">More Info...</a>
+					</div>
+				</div>
+				<nav>
+				  <ul class="pagination paging animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
+					<li>
+					  <a href="#" aria-label="Previous">
+						<span aria-hidden="true">«</span>
+					  </a>
+					</li>
+					<li><a href="#">1</a></li>
+					<li><a href="#">2</a></li>
+					<li><a href="#">3</a></li>
+					<li><a href="#">4</a></li>
+					<li><a href="#">5</a></li>
+					<li>
+					  <a href="#" aria-label="Next">
+						<span aria-hidden="true">»</span>
+					  </a>
+					</li>
+				  </ul>
+				</nav>
+			</div>
+			{% include 'web/sidebar_right.html' %}
+			<div class="clearfix"> </div>
+		</div>
+	</div>
+<!--- /blog ---->
+{% endblock content %}

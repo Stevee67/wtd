@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+<body>
+{% block title %}Hello user!If you want create your own open id account,
+            please fill in form bellow and click 'Registration'{% endblock %}
+{% block body %}
+  <h2>Please fill in all fields for success registration!</h2>
+  <form action="/registration" method=post>
+    Your name:
+      <input type=text name=name>
+    Password:
+      <input type=text name=pass1>
+    Confirm password:
+      <input type=text name=pass2>
+      <input type=submit value="Registration">
+  </form>
+    <p>{{error}}</p>
+{% endblock %}
+</body>
+</html>

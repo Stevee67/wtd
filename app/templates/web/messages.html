@@ -1,0 +1,128 @@
+{% extends 'web/main.html' %}
+
+{% block content %}
+<script>
+    whattodoApp.controller('messages', function($scope, $http, $timeout, socket) {
+        $scope.loading = false;
+        $scope.messages = [];
+        $scope.in_room = false;
+        $scope.on_page = 40;
+        $scope.g_user= '{{g_user}}';
+
+
+        $scope.remove_message = function(message) {
+			return $http({ method: 'DELETE',url: '/message/'+message.id}).then(function successCallback(data) {
+                $scope.delete_element($scope.data, message)
+            }, function errorCallback(response) {
+            });
+        };
+
+        $scope.confirm = function(user) {
+			return $http({ method: 'POST',url: '/confirm/'+user.id}).then(function successCallback(data) {
+                user = data.data.user;
+                $scope.loading = false;
+            }, function errorCallback(response) {
+
+            });
+        };
+
+        $scope.on_scroll = function () {
+
+        };
+
+        $scope.get_messages = function(user, g_user){
+            $scope.on_page = 40;
+            scrool_to_bottom('#messages', $("#partofmessage").height()*$scope.on_page);
+            $scope.messages = [];
+            $scope.in_room = user.id;
+            socket.emit('messages', {user_id:user.id, g_user_id:g_user.id},function () {
+                return false
+            });
+        };
+
+        $scope.load_users = function(){
+            socket.emit('load_users', {},function () {
+                return false
+            });
+        };
+
+        socket.on('on_load_users', function (data) {
+
+                return false
+            });
+
+        socket.on('response', function (data) {
+                $scope.messages = data.data;
+                $timeout(function () {
+                    scrool_to_bottom('#messages', $("#partofmessage").height()*$scope.on_page);
+                },100);
+                return false
+            });
+
+        $scope.send_message = function(text){
+            return $http({ method: 'POST',url: '/send_message', data: {recipient:$scope.in_room, message:text}}).then(function successCallback(data) {
+                $scope.messages.push(data.data);
+                $scope.on_page += 1;
+                scrool_to_bottom('#messages', $("#partofmessage").height()*$scope.on_page);
+            }, function errorCallback(response) {
+            });
+        }
+
+    });
+</script>
+    {% raw %}
+<div ng-controller="messages" ng-init="init()" class="container">
+    <div class="tra-top" ng-if="data" style="height: 400px">
+        <h4>Messages</h4>
+        <div style="width: 30%;float: left;height: 400px">
+            <ul class="rout">
+                <li class="ser">Chats</li>
+                <div class="clearfix"></div>
+            </ul>
+            <ul ng-if="user"
+                class="rou-secnd animated wow fadeInUp animated"
+                data-wow-duration="1200ms" data-wow-delay="500ms"
+                style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;"
+                ng-repeat="user in data" style="overflow-y: hidden;">
+                <li class="rou">
+                    <p ng-click="get_messages(user, addt_data.g_user)" ng-bind="user.name"></p>
+                    <b ng-if="user.not_read != '0'">(<span ng-bind="user.not_read" style="color: red"></span>)</b>
+                </li>
+                <div class="clearfix"></div>
+            </ul>
+        </div>
+        <div style="width: 70%;float: right;height: 400px">
+            <ul class="rout">
+                <li class="rou">Messages</li>
+                <div class="clearfix"></div>
+            </ul>
+            <!--- rou-secnd ---->
+            <div style="width: 80%;bottom:0;margin:0 10% 0 10%;height: 400px;font-size: 80%">
+                <div style="overflow-y: auto; height: 300px" id="messages">
+                    <ul ng-if="message" id="partofmessage"
+                        class="rou-secnd animated wow fadeInUp animated"
+                        data-wow-duration="1200ms" data-wow-delay="500ms"
+                        style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;"
+                        ng-repeat="message in messages">
+
+                        <li class="rou" style="width: 70%;">
+                            <span style="color: blue;float: left" ng-bind="message.sender.name"></span>
+                            <span style="padding-left:1em;font-size: 90%" ng-bind="message.cr_tm"></span>
+                            <p style="color: black;padding-top:1em;" ng-bind="message.content"></p>
+                        </li>
+                        <div class="clearfix"></div>
+                    </ul>
+                </div>
+                <div ng-if="in_room" style="bottom:0;">
+                    <input style="width: 90%" ng-model="text" id="message-input">
+                    <button ng-click="send_message(text)"
+                            style="float: right;">Send
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!--- /rou-secnd ---->
+    </div>
+</div>
+    {% endraw %}
+{% endblock %}

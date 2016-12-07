@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to whattodo openid app:)</title>
+</head>
+<body>
+{% block title %}Hello {{user.name}}!{% endblock %}
+<p>Your open id - {{ user.open_id }}</p>
+<a href="/logout">Logout</a>
+</body>
+</html>

@@ -1,0 +1,68 @@
+{% extends 'web/main.html' %}
+{% block content %}
+<script>
+    whattodoApp.controller('manage_agents', function($scope, $http) {
+        $scope.loading = false;
+
+        $scope.remove_agent = function(agent) {
+			return $http({ method: 'DELETE',url: '/remove_agent/'+agent.id}).then(function successCallback() {
+                $scope.delete_element($scope.data, agent)
+            }, function errorCallback(response) {
+            });
+        };
+
+        $scope.confirm = function(agent) {
+			return $http({ method: 'PUT',url: '/confirm_agent/'+agent.id}).then(function successCallback(data) {
+                $scope.update_list($scope.data, data.data);
+                $scope.loading = false;
+            }, function errorCallback(response) {
+            });
+        };
+
+    });
+</script>
+    {% raw %}
+    <div ng-controller="manage_agents" ng-init="init()" class="container">
+        <div class="tra-top" ng-if="data">
+            <h4>List agents</h4>
+            <ul class="rout">
+                <li class="fir">Name</li>
+                <li class="fir">Email</li>
+                <li class="fir">Owner</li>
+                <li class="fir">Phone</li>
+                <li class="dat">Message</li>
+                <li class="sm">Confirmed</li>
+                <li class="sm">Delete</li>
+                <div class="clearfix"></div>
+            </ul>
+            <!--- rou-secnd ---->
+            <ul ng-if="agent" class="rou-secnd animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;" ng-repeat="agent in data" >
+                <li class="fir">
+                    <p ng-bind="agent.name"></p>
+                </li>
+                <li class="fir">
+                    <p ng-bind="agent.email"></p>
+                </li>
+                <li class="fir">
+                    <p ng-bind="agent.user.name"></p>
+                </li>
+                <li class="fir">
+                    <p ng-bind="agent.phone"></p>
+                </li>
+                <li class="dat">
+                    <p ng-bind="agent.message" style="width: 99%; white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="{{agent.message}}"></p>
+                </li>
+                <li class="sm">
+                    <button ng-if="!agent.active" ng-click="confirm(agent)">Confirm</button><p ng-if="agent.active">True</p>
+                </li>
+                <li class="sm">
+                    <button ng-click="remove_agent(agent)">Delete</button>
+                </li>
+
+                <div class="clearfix"></div>
+            </ul>
+            <!--- /rou-secnd ---->
+        </div>
+    </div>
+    {% endraw %}
+{% endblock %}

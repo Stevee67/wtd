@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login to openid app</title>
+</head>
+<body>
+{% block title %}Log in{% endblock %}
+{% block body %}
+  <form action="/login" method=post>
+    Your name:
+      <input type=text name=name>
+    Password:
+      <input type=text name=pass>
+      <input type=submit value="Log in">
+  </form>
+    <p>{{error}}</p>
+    <p>If you haven`t account yet please sign up!</p>
+    <a href="/registration">Sign up</a>
+{% endblock %}
+</body>
+</html>
