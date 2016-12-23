@@ -245,7 +245,9 @@ whattodoApp.directive('pfDate', function () {
 });
 whattodoApp.factory('socket', function ($rootScope) {
   var socket = io.connect('http://192.168.0.25:8888');
-
+    socket.on('error', function() {
+        socket.disconnect()
+    });
   return {
     on: function (eventName, callback) {
       socket.on(eventName, function () {

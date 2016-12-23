@@ -5,34 +5,26 @@
 		$scope.nragnts = 0;
 		$scope.current_user_id = '{{g.user.id}}';
 		$scope.nmsgs = 0;
-		$scope.load_agents = function () {
+		$scope.load_data = function () {
+			console.log('dsfdsfsd')
 			if($scope.current_user_id){
-				return $http({
-					method: 'POST',
-					url: '/nrm'
-				}).then(function successCallback(data) {
-					$scope.nragnts = data.data.agnts;
-					$scope.nmsgs = data.data.msgs;
-					if (now() - window.lastUserActivity > 300){
-						console.log('ok')
-					}
-					$timeout(function () {
-						$scope.load_agents()
-					},2000)
-
-				}, function errorCallback(response) {
-				});
+				$scope.load_header_data()
 			}
 		};
+		$scope.load_header_data = function () {
+			return $http({ method: 'POST',url: '/get_header_data', data: {}}).then(function successCallback(data) {
+                console.log(data)
+				$scope.nagnts = data.data.nagnts;
+				$scope.nmsgs = data.data.nmsgs;
+//				$timeout(function () {
+//					$scope.load_header_data()
+//				},2000)
+            }, function errorCallback(response) {
+            });
+		};
 
-		socket.emit('update', {},function () {
-			return false
-		});
 
-		socket.on('update_load', function (data) {
-			$scope.nagnts = data.nagnts;
-			$scope.nmsgs = data.nmsgs;
-		});
+		$scope.load_data()
 
 	})
 </script>

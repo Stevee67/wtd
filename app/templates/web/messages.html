@@ -8,6 +8,7 @@
         $scope.in_room = false;
         $scope.on_page = 40;
         $scope.g_user= '{{g_user}}';
+        $scope.not_read_messages = 0;
 
 
         $scope.remove_message = function(message) {
@@ -26,38 +27,35 @@
             });
         };
 
-        $scope.on_scroll = function () {
-
-        };
-
-        $scope.get_messages = function(user, g_user){
+        $scope.get_messages = function(user, g_user, last_message, chat_opened){
             $scope.on_page = 40;
-            scrool_to_bottom('#messages', $("#partofmessage").height()*$scope.on_page);
-            $scope.messages = [];
             $scope.in_room = user.id;
-            socket.emit('messages', {user_id:user.id, g_user_id:g_user.id},function () {
+            socket.emit('listen_messages', {user_id:user.id, g_user_id:g_user.id, chat_opened:chat_opened, last_message:last_message},function () {
                 return false
             });
+            $timeout(function () {
+                $scope.get_messages(user, g_user, $scope.messages.slice(-1)[0], true)
+            },2000)
         };
-
-        $scope.load_users = function(){
-            socket.emit('load_users', {},function () {
-                return false
-            });
-        };
-
-        socket.on('on_load_users', function (data) {
-
-                return false
-            });
 
         socket.on('response', function (data) {
-                $scope.messages = data.data;
+            console.log(data)
+            if(data.chat_opened === true){
+                if(data.messages.length>0) {
+                    console.log(data.messages);
+                    $scope.messages = $scope.messages.concat(data.messages);
+                    $timeout(function () {
+                        scrool_to_bottom('#messages', $("#partofmessage").height()*$scope.on_page);
+                    },100);
+                }
+            }else{
+                $scope.messages = data.messages;
                 $timeout(function () {
                     scrool_to_bottom('#messages', $("#partofmessage").height()*$scope.on_page);
                 },100);
-                return false
-            });
+            }
+            return false
+        });
 
         $scope.send_message = function(text){
             return $http({ method: 'POST',url: '/send_message', data: {recipient:$scope.in_room, message:text}}).then(function successCallback(data) {
@@ -66,12 +64,25 @@
                 scrool_to_bottom('#messages', $("#partofmessage").height()*$scope.on_page);
             }, function errorCallback(response) {
             });
-        }
-
+        };
+        $scope.load = function(){
+            $scope.addt_data =[];
+            return $http({ method: 'POST',url: '/messages'}).then(function successCallback(data) {
+                $scope.data = data.data.data;
+                for(var key in data.data){
+                    if(key != 'data'){
+                       $scope.addt_data[key] = data.data[key]
+                    }
+                }
+                $scope.on_page += 1;
+                scrool_to_bottom('#messages', $("#partofmessage").height()*$scope.on_page);
+            }, function errorCallback(response) {
+            });
+        };
     });
 </script>
     {% raw %}
-<div ng-controller="messages" ng-init="init()" class="container">
+<div ng-controller="messages" ng-init="load()" class="container">
     <div class="tra-top" ng-if="data" style="height: 400px">
         <h4>Messages</h4>
         <div style="width: 30%;float: left;height: 400px">
@@ -85,8 +96,8 @@
                 style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;"
                 ng-repeat="user in data" style="overflow-y: hidden;">
                 <li class="rou">
-                    <p ng-click="get_messages(user, addt_data.g_user)" ng-bind="user.name"></p>
-                    <b ng-if="user.not_read != '0'">(<span ng-bind="user.not_read" style="color: red"></span>)</b>
+                    <p ng-click="get_messages(user, addt_data.g_user, 0)" ng-bind="user.name"></p>
+                    <b ng-if="user.not_read">(<span ng-bind="user.not_read" style="color: red"></span>)</b>
                 </li>
                 <div class="clearfix"></div>
             </ul>
@@ -106,7 +117,7 @@
                         ng-repeat="message in messages">
 
                         <li class="rou" style="width: 70%;">
-                            <span style="color: blue;float: left" ng-bind="message.sender.name"></span>
+                            <span style="color: blue;float: left" ng-bind="message.channel.sender.name"></span>
                             <span style="padding-left:1em;font-size: 90%" ng-bind="message.cr_tm"></span>
                             <p style="color: black;padding-top:1em;" ng-bind="message.content"></p>
                         </li>

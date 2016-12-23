@@ -12,6 +12,7 @@ from flask_socketio import SocketIO, emit
 from gevent import monkey
 import os
 import sys
+import pymongo.errors
 
 app = Flask(__name__)
 oid = OpenID(app, safe_roots=[],
@@ -32,7 +33,8 @@ def create_app():
 
 def register_db():
     def load():
-        MongoEngine(app)
+        db = MongoEngine()
+        db.init_app(app)
     return load
 
 

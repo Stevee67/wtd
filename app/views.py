@@ -1,7 +1,7 @@
 from flask import render_template, redirect, request, g, url_for, session, \
     flash
 from app import oid, login_manager, socket_io
-from flask_socketio import emit
+from flask_socketio import emit, join_room, leave_room
 from app.models import Users, OpenIdUsers, Agents, Messages, Groups, Q, \
     DaemonNotificationLoad, Channels
 from app.blueprints import main, open_id
@@ -275,31 +275,33 @@ def messages():
 @socket_io.on('load_users')
 @timer
 def load_users():
+    print('load users')
     if not session.get('user_id'):
         return 'Bad request!'
     DaemonNotificationLoad.update_not_read_messages(session.get('user_id'))
 
 
-@socket_io.on('messages')
-@timer
+@socket_io.on('listen_messages')
 def socket_message(data):
-    item_per_page = data.get('item_per_page') or 20
-    page = data.get('page') or 1
-    from_ = 0 if page == 1 else item_per_page * (page - 1)
-    channel1 = Channels.objects(recipient=Users.objects(id=data.get('g_user_id')).first(),
-          sender=Users.objects(id=data.get('user_id')).first()).first()
-    channel2 = Channels.objects(
-        recipient=Users.objects(id=data.get('user_id')).first(),
-        sender=Users.objects(id=data.get('g_user_id')).first()).first()
-    msgs = []
-    if channel1 or channel2:
-        msgs = Messages.objects(
-            channel__in=[channel1, channel2]).order_by('-cr_tm')[from_:item_per_page * page]
-    Messages.objects(channel=channel1).update(status=Messages.STATUSES['READ'])
-    messgs = list(msgs)
-    messgs.reverse()
-    emit('response', {'data': [message.object_to_dict() for message in messgs]})
+    Messages.update_messages_daemon(data, emit, request.sid)
 
+
+@socket_io.on('join')
+def on_join(data):
+    print('join')
+    username = data['username']
+    room = data['room']
+    join_room(room)
+    send(username + ' has entered the room.', room=room)
+
+
+@socket_io.on('leave')
+def on_leave(data):
+    print('leave')
+    username = data['username']
+    room = data['room']
+    leave_room(room)
+    send(username + ' has left the room.', room=room)
 
 # @main.route('get_messages', methods=['POST'])
 # # @admin
@@ -354,27 +356,29 @@ def message_delete(message_id):
 
 @socket_io.on('connect')
 def on_connect():
+    print('on connect')
     if 'user_id' in session:
         DaemonNotificationLoad(socket_io)
         user = Users.objects(id=session['user_id']).first()
+        user.sid = request.sid
+        user.save()
         session[request.sid] = user.id
 
-# @socket_io.on('disconnect')
-# def on_disconnect():
-#     print('disconnect')
-#     if 'user_id' in session:
-#         user = Users.objects(id=session['user_id']).first()
-#         user.sid = None
-#         user.save()
 
-
-@socket_io.on('update')
-def make_thread(*args):
+@socket_io.on('disconnect')
+def on_disconnect():
+    print('disconnect')
     if 'user_id' in session:
-        thread = threading.Thread(
-            target=DaemonNotificationLoad.update_notification,
-            args=(session[request.sid], request.sid))
-        thread.start()
+        user = Users.objects(id=session['user_id']).first()
+        user.sid = None
+        user.save()
+
+
+@main.route('get_header_data', methods=['POST'])
+def get_header_data():
+    if g.user:
+        daemon = DaemonNotificationLoad(emit=emit)
+        return dumps(daemon.update_notification(g.user.id))
 
 
 @main.route('agent')
@@ -393,17 +397,6 @@ def manage_agents_post():
     agents = Agents.objects.all()
     return dumps({'data': [agent.object_to_dict() for agent in agents]})
 
-
-# @socket_io.on('new_agents')
-# @timer
-# def new_agents_count_():
-#     count_agents = Agents.objects(active=False).count()
-#     while True:
-#         try:
-#             emit('new_agents', {'data': str(count_agents)})
-#             time.sleep(1000)
-#         except Exception:
-#             break
 
 
 @main.route('new_agents', methods=['POST'])

@@ -169,6 +169,48 @@ class Messages(Document, Base):
     def send_message(self, content, user):
         pass
 
+    @staticmethod
+    def update_messages_daemon(data, emit, sid):
+        item_per_page = data.get('item_per_page') or 20
+        page = data.get('page') or 1
+        listener = False
+        if data.get('chat_opened'):
+            listener = True
+        from_ = 0 if page == 1 else item_per_page * (page - 1)
+        g_user = Users.objects(id=data.get('g_user_id')).first()
+        channel1 = Channels.objects(
+            recipient=g_user,
+            sender=Users.objects(id=data.get('user_id')).first()).first()
+        channel2 = Channels.objects(
+            recipient=Users.objects(id=data.get('user_id')).first(),
+            sender=g_user).first()
+        if channel1 or channel2:
+            if listener is True:
+                msgs = Messages.objects(
+                    channel__in=[channel1, channel2],
+                    cr_tm__gt=data.get('last_message')['cr_tm']).order_by(
+                    '-cr_tm').all()
+                not_readed = Messages.objects(channel=channel1,
+                                              status=Messages.STATUSES[
+                                                  'NOT_READ']).count()
+                Messages.objects(channel=channel1).update(
+                    status=Messages.STATUSES['READ'])
+            else:
+                msgs = Messages.objects(
+                    channel__in=[channel1, channel2]).order_by(
+                    '-cr_tm')[from_:item_per_page * page]
+                not_readed = Messages.objects(channel=channel1,
+                                              status=Messages.STATUSES[
+                                                  'NOT_READ']).count()
+                Messages.objects(channel=channel1).update(
+                    status=Messages.STATUSES['READ'])
+            messgs = list(msgs)
+            messgs.reverse()
+            emit('response', {'messages': [message.object_to_dict()
+                                           for message in messgs],
+                              'not_readed': not_readed,
+                              'chat_opened': listener}, room=sid)
+
 
 class OpenIdUsers(Document):
 
@@ -200,11 +242,11 @@ class DaemonNotificationLoad:
 
     _users = set()
 
-    def __init__(self, socket_io):
-        DaemonNotificationLoad.socket_io = socket_io
+    def __init__(self, emit):
+        DaemonNotificationLoad.emit = emit
 
     @staticmethod
-    def update_notification(uid, sid):
+    def update_notification(uid):
         new_m = None
         new_a = None
         user = Users.objects(id=uid).first()
@@ -215,18 +257,20 @@ class DaemonNotificationLoad:
                 if user.get_id() not in DaemonNotificationLoad._users:
                     break
                 count_agents = 0
-                count_new_mess = Messages.objects(recipient=user,
-                                                       status=Messages.STATUSES[
+                channels = Channels.objects(recipient=user).all()
+                count_new_mess = Messages.objects(channel__in=channels,
+                                                  status=Messages.STATUSES[
                                                            'NOT_READ']).count()
                 if user.admin:
                     count_agents = Agents.objects(active=False).count()
+
+                print(new_m, new_a)
                 if new_m is None or new_m != count_new_mess or new_a is None or new_a != count_agents:
                     new_m = count_new_mess
                     new_a = count_agents
-                    DaemonNotificationLoad.socket_io.emit(
-                        'update_load', {'nmsgs': count_new_mess,
-                                        'nagnts': count_agents},
-                                        room=sid)
+                    print(new_m, new_a)
+                    return {'nmsgs': count_new_mess,
+                            'nagnts': count_agents}
                 time.sleep(2)
 
     @staticmethod
