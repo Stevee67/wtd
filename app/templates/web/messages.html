@@ -8,7 +8,9 @@
         $scope.in_room = false;
         $scope.on_page = 40;
         $scope.g_user= '{{g_user}}';
-        $scope.not_read_messages = 0;
+        $scope.log_out = false;
+        $scope.user = null;
+
 
 
         $scope.remove_message = function(message) {
@@ -28,18 +30,22 @@
         };
 
         $scope.get_messages = function(user, g_user, last_message, chat_opened){
+            console.log('get')
             $scope.on_page = 40;
             $scope.in_room = user.id;
-            socket.emit('listen_messages', {user_id:user.id, g_user_id:g_user.id, chat_opened:chat_opened, last_message:last_message},function () {
-                return false
-            });
+            $scope.user = user;
+            if($scope.log_out === false){
+                socket.emit('listen_messages', {user_id:user.id, g_user_id:g_user.id, chat_opened:chat_opened, last_message:last_message},function () {
+                    return false
+                });
+            }
             $timeout(function () {
                 $scope.get_messages(user, g_user, $scope.messages.slice(-1)[0], true)
             },2000)
+
         };
 
         socket.on('response', function (data) {
-            console.log(data)
             if(data.chat_opened === true){
                 if(data.messages.length>0) {
                     console.log(data.messages);
@@ -79,6 +85,33 @@
             }, function errorCallback(response) {
             });
         };
+        $scope.inactivityTime = function () {
+            var t;
+            window.onload = resetTimer;
+            document.onload = resetTimer;
+            document.onmousemove = resetTimer;
+            document.onmousedown = resetTimer; // touchscreen presses
+            document.ontouchstart = resetTimer;
+            document.onclick = resetTimer;     // touchpad clicks
+            document.onscroll = resetTimer;    // scrolling with arrow keys
+            document.onkeypress = resetTimer;
+
+            function logout() {
+                console.log("You are now logged out.");
+                $scope.log_out = true
+            }
+
+            function resetTimer() {
+                console.log('here')
+                if($scope.log_out === true){
+                    $scope.log_out = false
+                }
+                clearTimeout(t);
+                t = setTimeout(logout, 15000);
+                // 1000 milisec = 1 sec
+            }
+        };
+        $scope.inactivityTime()
     });
 </script>
     {% raw %}
